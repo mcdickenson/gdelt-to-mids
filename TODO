@@ -1,0 +1,9 @@
+obtain full historical backfiles from gdelt.utdallas.edu
+merge with mids data
+temporal (dis)aggregation
+split into training and test sets
+feature selection
+model training/estimation/learning
+test set validation
+ensemble/random forest over candidate models
+true oos classification (2002+)
