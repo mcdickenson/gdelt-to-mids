@@ -1,6 +1,5 @@
 # turn gdelt historical csvs into rda files 
 
-rm(list=ls())
 setwd('~/github/gdelt-to-mids')
 source('start.R')
 
