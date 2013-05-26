@@ -1,4 +1,6 @@
 .DS_Store
 /data/*.zip
 /data/*.txt
+/data/*.rda
 /data/*.csv
+
