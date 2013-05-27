@@ -3,4 +3,4 @@
 /data/*.txt
 /data/*.rda
 /data/*.csv
-
+/data/*.*.gz
