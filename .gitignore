@@ -4,3 +4,4 @@
 /data/*.rda
 /data/*.csv
 /data/*.*.gz
+/data/zips/*.zip
