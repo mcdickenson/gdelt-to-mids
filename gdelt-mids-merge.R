@@ -63,7 +63,14 @@ dim(dd)
 save(dd, file="dd.rda")
 
 # merge with gdelt by year 
-
+head(gd1992)
+gd1992$month = gd1992$MonthYear %% 100
+gd1992$day =  gd1992$SQLDATE %% 100
+gd1992$date = as.Date(paste(gd1992$Year, gd1992$month, gd1992$day, sep="-"))
+gd1992mid = merge(gd1992, dd, 
+	by=c('date', 'Actor1CountryCode', 'Actor2CountryCode'), 
+	all.x=TRUE)
+names(dd)
 
 YEARS = c("1992")
 
