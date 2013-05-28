@@ -34,7 +34,7 @@ for(year in YEARS){
 		bigname = paste('gd', year, sep="")
 		for(ltr in letters[1:3]){
 			varname = paste('gd', year, ltr, sep="")
-			datafile = paste(year, '.csv.gz', sep="")
+			datafile = paste(year, ltr, '.csv.gz', sep="")
 			readcommand = paste(varname, " = read.csv('", datafile, "', sep='\t', header=F, flush=T, as.is=T)",sep="")
 			eval(parse(text=readcommand))
 
