@@ -13,6 +13,8 @@ mid$StDay = ifelse(mid$StDay==-9, 15, mid$StDay)
 mid$EndDay = ifelse(mid$EndDay==-9, 15, mid$EndDay)
 mid$start = as.Date(paste(mid$StYear, mid$StMon, mid$StDay, sep="-"))
 mid$end = as.Date(paste(mid$EndYear, mid$EndMon, mid$EndDay, sep="-"))
+mid$end = ifelse(mid$end<mid$start, mid$start, mid$end)
+mid$end = as.Date(mid$end)
 head(mid)
 
 
@@ -25,6 +27,7 @@ dailify = function(mydata){
 	daily = as.data.frame(daily)
 
 	for(i in 1:nrow(mydata)){  
+		print(i)
 		start.date = mydata[i,"start"]
 		end.date =  mydata[i,"end"]
 		all.dates = seq(start.date, length = end.date - start.date, by = "day")
@@ -50,4 +53,5 @@ dailymini = dailify(midmini)
 head(dailymini)
 tail(dailymini)
 
-
+dailydyad = dailify(mid)
+save(dailydyad, file="dailydyad.rda")
