@@ -27,7 +27,7 @@ dailify = function(mydata){
 	daily = as.data.frame(daily)
 
 	for(i in 1:nrow(mydata)){  
-		print(i)
+		if(i%%10==0){print(i)}
 		start.date = mydata[i,"start"]
 		end.date =  mydata[i,"end"]
 		all.dates = seq(start.date, length = end.date - start.date, by = "day")
@@ -48,10 +48,12 @@ dailify = function(mydata){
 	return(daily)
 }
 
-midmini = mid[1:10,]
-dailymini = dailify(midmini)
+dailymini = dailify(mid[1:10,])
 head(dailymini)
 tail(dailymini)
 
 dailydyad = dailify(mid)
+head(dailydyad)
+tail(dailydyad)
+max(dailydyad$end)
 save(dailydyad, file="dailydyad.rda")
