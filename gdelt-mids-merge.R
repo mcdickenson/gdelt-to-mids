@@ -47,8 +47,20 @@ dailydyad$Actor2CountryCode = ifelse(dailydyad$CCodeB==713, "TWN", dailydyad$Act
 dailydyad$Actor2CountryCode = ifelse(dailydyad$CCodeB==710, "CHN", dailydyad$Actor2CountryCode)
 
 
-# TODO: consider de-directing the dyads 
+# TODO: de-directing the dyads 
 # (ie duplicating all records in dailydyad and reversing the actor codes)
+dd2 = dailydyad
+dd2$reverse = 1
+dailydyad$reverse = 0
+tmp1 = dd2$Actor1CountryCode
+tmp2 = dd2$Actor2CountryCode
+dd2$Actor1CountryCode = tmp2
+dd2$Actor2CountryCode = tmp1
+head(dd2)
+
+dd = rbind(dailydyad, dd2)
+dim(dd)
+save(dd, file="dd.rda")
 
 # merge with gdelt by year 
 
