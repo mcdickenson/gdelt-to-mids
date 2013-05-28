@@ -1,4 +1,6 @@
 .DS_Store
+*.pdf
+/data/*.pdf
 /data/*.zip
 /data/*.txt
 /data/*.rda
