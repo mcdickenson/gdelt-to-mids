@@ -7,13 +7,13 @@ setwd(pathData)
 
 headers = read.table('CSV.header.historical.txt', sep='\t', as.is=TRUE)
 
-YEARS = c(1979)
+YEARS = c(1984:2001)
 
 for(year in YEARS){
 	print(year)
 
 	varname = paste('gd', year, sep="")
-	datafile = paste(year, '.csv', sep="")
+	datafile = paste(year, '.csv.gz', sep="")
 	readcommand = paste(varname, " = read.csv('", datafile, "', sep='\t', header=F, flush=T, as.is=T)",sep="")
 	eval(parse(text=readcommand))
 
