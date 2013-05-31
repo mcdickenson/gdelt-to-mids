@@ -7,7 +7,7 @@ setwd(pathData)
 
 headers = read.table('CSV.header.historical.txt', sep='\t', as.is=TRUE)
 
-YEARS = c("1999a", "1999b", "1999c", "2000a", "2000b", "2000c", "2001a", "2001b", "2001c")
+YEARS = c("1997a", "1997b")
 
 for(year in YEARS){
 	print(year)
