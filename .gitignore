@@ -3,6 +3,7 @@
 /data/*.pdf
 /data/*.zip
 /data/*.txt
+/data/.Rapp.history
 /data/*.rda
 /data/*.csv
 /data/*.*.gz
