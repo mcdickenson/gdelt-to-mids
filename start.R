@@ -1,4 +1,8 @@
 # load libraries
+require(biganalytics)
+require(biglm)
+require(bigmemory)
+require(bigtabulate)
 require(countrycode)
 require(doBy)
 require(DMwR)
