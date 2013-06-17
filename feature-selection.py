@@ -76,8 +76,6 @@ data['fn'][(data['mid']==1) & (data['pred']==0)] = 1
 y_new_pred = sv1.predict(X_new) # all zeroes
 new_pred = DataFrame(new_pred)
 
-
-
 # grid search for gamma specification
 gammas = np.logspace(-6, -1, 10)
 svc = svm.SVC()
@@ -90,6 +88,28 @@ clf.best_estimator.gamma
 # gamma = 1**(-6)
 
 
+# untested, probably needs tweaking 
+def pnr(obs, pred):
+	pred = DataFrame(pred)
+	data = pred.join(obs, how='outer')
+	data[3] = 0 
+	data[3][data.mid==1 & data[0]==1] = 1 
+	data[4] = 0 
+	data[4][data.mid==1 & data[0]==0] = 1
+	tp = sum(data[3])
+	fp = len(pred.index) - tp 
+	fn = sum(data[4])
+	precis = tp / (tp + fp)
+	print "precision: ", precis 
+	recall = tp / (tp + fn)
+	print "recall: ", recall 
+
+# pred = DataFrame(y_pred)
+
+# data = pd.concat(pred, y)
+
+# data = pred.join(y, how='outer', colnames=c('pred', 'actual'))
+# data[3] = 0 
 
 
 
