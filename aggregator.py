@@ -53,7 +53,14 @@ def aggregate():
     ix += 1
     if options.limit_rows and ix > options.limit_rows:
       break
-  print counts
+
+  sys.stdout.write("year,month,country_1,country_2,event_root_code,count\n")
+  for year in counts.keys():
+    for month in counts[year].keys():
+      for country_1 in counts[year][month].keys():
+        for country_2 in counts[year][month][country_1].keys():
+          for event_root_code in counts[year][month][country_1][country_2]:
+            sys.stdout.write("%s,%s,%s,%s,%s,%s\n" % (year, month, country_1, country_2, event_root_code, counts[year][month][country_1][country_2][event_root_code]))
 
 if __name__ == '__main__':
   aggregate()
