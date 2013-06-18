@@ -14,6 +14,7 @@ def aggregate():
   p.add_option('--header_sep', default=",", help="Character to split header row.")
   options, arguments = p.parse_args()
 
+  event_codes = map(str, range(1, 20))
   actor_types = ["MIL"]
   date_ix = None
   ix = 0
@@ -61,14 +62,14 @@ def aggregate():
         counts[this_date.year][this_date.month][country_1] = {}
       if country_2 not in counts[this_date.year][this_date.month][country_1].keys():
         counts[this_date.year][this_date.month][country_1][country_2] = {}
-      if event_root_code not in counts[this_date.year][this_date.month][country_1][country_2].keys():
-        counts[this_date.year][this_date.month][country_1][country_2][event_root_code] = 0
+        for event_code in event_codes:
+          counts[this_date.year][this_date.month][country_1][country_2][event_code] = 0
+        for actor_type in actor_types:
+          counts[this_date.year][this_date.month][country_1][country_2][actor_type] = 0
 
       counts[this_date.year][this_date.month][country_1][country_2][event_root_code] += 1
 
       for actor_type in actor_types:
-        if actor_type not in counts[this_date.year][this_date.month][country_1][country_2].keys():
-          counts[this_date.year][this_date.month][country_1][country_2][actor_type] = 0
         if (actor_1_type == actor_type) or (actor_2_type == actor_type):
           counts[this_date.year][this_date.month][country_1][country_2][actor_type] += 1
 
@@ -76,13 +77,17 @@ def aggregate():
     if options.limit_rows and ix > options.limit_rows:
       break
 
-  sys.stdout.write("year,month,country_1,country_2,event_root_code,count\n")
+  eventcodestr = ",".join('event' + i for i in event_codes)
+  typestr = ",".join(['actor' + i for i in actor_types])
+  col_names = "year,monthy,country_1,country_2," + eventcodestr + "," + typestr + "\n" 
+  formatted_string = ",".join(["%s"] * (4 + len(event_codes) + len(actor_types))) + "\n"
+  sys.stdout.write(col_names)
   for year in counts.keys():
     for month in counts[year].keys():
       for country_1 in counts[year][month].keys():
         for country_2 in counts[year][month][country_1].keys():
-          for event_root_code in counts[year][month][country_1][country_2]:
-            sys.stdout.write("%s,%s,%s,%s,%s,%s\n" % (year, month, country_1, country_2, event_root_code, counts[year][month][country_1][country_2][event_root_code]))
+          data = tuple([year, month, country_1, country_2] + counts[year][month][country_1][country_2].values())
+          sys.stdout.write(formatted_string % data)
 
 if __name__ == '__main__':
   aggregate()
