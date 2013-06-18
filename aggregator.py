@@ -9,14 +9,25 @@ def aggregate():
   p.add_option('--start', '-s', default="1900", type="int", help="Just aggregate data starting with this year.")
   p.add_option('--end', '-e', default="3000", type="int", help="Just aggregate data up to this year.")
   p.add_option('--limit_rows', '-l', default=None, type="int", help="Just parse a fixed number of rows.")
+  p.add_option('--sep', '-p', default=",", help="Character that splits column in main")
+  p.add_option('--header', '-d', default=None, help="Specify header from a separate file.")
+  p.add_option('--header_sep', default=",", help="Character to split header row.")
   options, arguments = p.parse_args()
 
-
-  headers = []
   date_ix = None
-
   ix = 0
   counts = {}
+
+  if options.header: 
+    with open(options.header, 'rb') as f:
+      headers = f.readline().replace(options.header_sep, " ").rstrip().split()
+      date_ix = headers.index('date')
+      actor1_geo_country_code_ix = headers.index('Actor1Geo_CountryCode')
+      actor2_geo_country_code_ix = headers.index('Actor2Geo_CountryCode')
+      root_code_ix = headers.index('EventRootCode')
+  else: 
+    headers = []
+  
   for line in sys.stdin:
     # Get the headers
     line = line.replace('"','').replace("\n", '').split(",")
