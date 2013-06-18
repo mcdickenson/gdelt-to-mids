@@ -14,6 +14,7 @@ def aggregate():
   p.add_option('--header_sep', default=",", help="Character to split header row.")
   options, arguments = p.parse_args()
 
+  actor_types = ["MIL"]
   date_ix = None
   ix = 0
   counts = {}
@@ -36,6 +37,8 @@ def aggregate():
       date_ix = headers.index('date')
       actor1_geo_country_code_ix = headers.index('Actor1Geo_CountryCode')
       actor2_geo_country_code_ix = headers.index('Actor2Geo_CountryCode')
+      actor1_type1_code_ix = headers.index('Actor1Type1Code')
+      actor2_type1_code_ix = headers.index('Actor1Type2Code')
       root_code_ix = headers.index('EventRootCode')
       continue
 
@@ -43,8 +46,10 @@ def aggregate():
     this_date = datetime.strptime(line[date_ix], "%Y-%m-%d")
     country_1 = line[actor1_geo_country_code_ix]
     country_2 = line[actor2_geo_country_code_ix]
+    actor_1_type = line[actor1_type1_code_ix]
+    actor_2_type = line[actor2_type1_code_ix] 
     event_root_code = line[root_code_ix]
-    # Is this in our window tp aggregate?
+    # Is this in our window to aggregate?
     if this_date.year >= options.start and this_date.year <= options.end:
 
       # Lazy init hashes
@@ -60,6 +65,12 @@ def aggregate():
         counts[this_date.year][this_date.month][country_1][country_2][event_root_code] = 0
 
       counts[this_date.year][this_date.month][country_1][country_2][event_root_code] += 1
+
+      for actor_type in actor_types:
+        if actor_type not in counts[this_date.year][this_date.month][country_1][country_2].keys():
+          counts[this_date.year][this_date.month][country_1][country_2][actor_type] = 0
+        if (actor_1_type == actor_type) or (actor_2_type == actor_type):
+          counts[this_date.year][this_date.month][country_1][country_2][actor_type] += 1
 
     ix += 1
     if options.limit_rows and ix > options.limit_rows:
