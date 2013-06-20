@@ -14,7 +14,7 @@ def aggregate():
   p.add_option('--header_sep', default=",", help="Character to split header row.")
   options, arguments = p.parse_args()
 
-  event_codes = map(str, range(1, 20))
+  event_codes = map(str, range(1, 21))
   actor_types = ["MIL"]
   date_ix = None
   ix = 0
@@ -24,8 +24,10 @@ def aggregate():
     with open(options.header, 'rb') as f:
       headers = f.readline().replace(options.header_sep, " ").rstrip().split()
       date_ix = headers.index('date')
-      actor1_geo_country_code_ix = headers.index('Actor1Geo_CountryCode')
-      actor2_geo_country_code_ix = headers.index('Actor2Geo_CountryCode')
+      actor1_geo_country_code_ix = headers.index('Actor1CountryCode')
+      actor2_geo_country_code_ix = headers.index('Actor2CountryCode')
+      actor1_type1_code_ix = headers.index('Actor1Type1Code')
+      actor2_type1_code_ix = headers.index('Actor2Type1Code')
       root_code_ix = headers.index('EventRootCode')
   else: 
     headers = []
@@ -36,10 +38,10 @@ def aggregate():
     if len(headers) == 0:
       headers = line
       date_ix = headers.index('date')
-      actor1_geo_country_code_ix = headers.index('Actor1Geo_CountryCode')
-      actor2_geo_country_code_ix = headers.index('Actor2Geo_CountryCode')
+      actor1_geo_country_code_ix = headers.index('Actor1CountryCode')
+      actor2_geo_country_code_ix = headers.index('Actor2CountryCode')
       actor1_type1_code_ix = headers.index('Actor1Type1Code')
-      actor2_type1_code_ix = headers.index('Actor1Type2Code')
+      actor2_type1_code_ix = headers.index('Actor2Type1Code')
       root_code_ix = headers.index('EventRootCode')
       continue
 
