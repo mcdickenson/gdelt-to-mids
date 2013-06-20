@@ -23,12 +23,6 @@ def aggregate():
   if options.header: 
     with open(options.header, 'rb') as f:
       headers = f.readline().replace(options.header_sep, " ").rstrip().split()
-      date_ix = headers.index('date')
-      actor1_geo_country_code_ix = headers.index('Actor1CountryCode')
-      actor2_geo_country_code_ix = headers.index('Actor2CountryCode')
-      actor1_type1_code_ix = headers.index('Actor1Type1Code')
-      actor2_type1_code_ix = headers.index('Actor2Type1Code')
-      root_code_ix = headers.index('EventRootCode')
   else: 
     headers = []
   
@@ -36,14 +30,17 @@ def aggregate():
     # Get the headers
     line = line.replace('"','').replace("\n", '').split(",")
     if len(headers) == 0:
-      headers = line
+      headers = line 
+    if ix==0:
       date_ix = headers.index('date')
       actor1_geo_country_code_ix = headers.index('Actor1CountryCode')
       actor2_geo_country_code_ix = headers.index('Actor2CountryCode')
       actor1_type1_code_ix = headers.index('Actor1Type1Code')
       actor2_type1_code_ix = headers.index('Actor2Type1Code')
       root_code_ix = headers.index('EventRootCode')
-      continue
+      if not options.header: 
+        ix += 1
+        continue
 
     # Parse some dates
     this_date = datetime.strptime(line[date_ix], "%Y-%m-%d")
