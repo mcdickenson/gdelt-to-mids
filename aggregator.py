@@ -78,6 +78,7 @@ def aggregate():
           counts[this_date.year][this_date.month][country_1][country_2][actor_type] += 1
 
     ix += 1
+    if (ix % 1000 == 0): print ix 
     if options.limit_rows and ix > options.limit_rows:
       break
 
