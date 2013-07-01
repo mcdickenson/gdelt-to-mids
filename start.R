@@ -7,12 +7,14 @@ require(countrycode)
 require(doBy)
 require(DMwR)
 require(e1071)
+require(ggplot2)
+require(Hmisc)
 require(lubridate)
-require(separationplot)
-require(verification)
+require(reshape)
 require(ROCR)
 require(RWeka)
-require(Hmisc)
+require(separationplot)
+require(verification)
 
 # define constants
 pathCode = '~/github/gdelt-to-mids' 
