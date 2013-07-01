@@ -48,5 +48,3 @@ dev.off()
 pdf("rus-usa1.pdf")
 plot.event.counts(rususa, "RUS-USA")
 dev.off()
-
-?legend
