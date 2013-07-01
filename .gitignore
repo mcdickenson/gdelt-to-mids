@@ -6,5 +6,6 @@
 /data/.Rapp.history
 /data/*.rda
 /data/*.csv
+/data/*.tsv
 /data/*.*.gz
 /data/zips/*.zip
