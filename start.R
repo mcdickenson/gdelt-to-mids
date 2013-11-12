@@ -15,6 +15,7 @@ require(ROCR)
 require(RWeka)
 require(separationplot)
 require(verification)
+require(zoo)
 
 # define constants
 pathCode = '~/github/gdelt-to-mids' 
