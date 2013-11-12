@@ -1,5 +1,7 @@
 .DS_Store
 *.pdf
+*.RData
+*.Rhistory
 /data/*.pdf
 /data/*.zip
 /data/*.txt
