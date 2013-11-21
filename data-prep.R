@@ -127,18 +127,21 @@ for(var in vars){
 newvars
 
 
-names(newdata)
 for(i in 1:nrow(newdata)){
+	if(i%%100==0){print(i/nrow(newdata))}
 	row = newdata[i,]
 	date.to = row$date 
 	if (date.to == min(dates)){ next }
 	date.from = dates[(which(dates==date.to)-LAGLENGTH)]
 	country1 = row$country_1
 	country2 = row$country_2
-	row.from = which(newdata$country_1==country1 & newdata$country_2 == country2 & newdata$date==date.from)
-	row[, newvars] = row.from[, vars]
-	if(i%%100==0){print(i/nrow(newdata))}
+	want = which((newdata$country_1==country1) & (newdata$country_2 == country2) & (newdata$date==date.from))[1]
+	if (is.na(want)){ next }
+	row.from = newdata[want, ]
+	newdata[i, newvars] = row.from[, vars]
 }
+
+
 
 # create 1-month diffs of vars
 # create proportion changes
