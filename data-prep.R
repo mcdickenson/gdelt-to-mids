@@ -54,7 +54,7 @@ summary(data$hostile5) # biggest dropoff: 4-5
 
 
 # create lagged versions of vars
-lagger = function(data, vars, countries, dates, laglength=1){
+lagger = function(data, vars, countries, dates, laglength=1, evaluate=FALSE){
 	# data: the full dataset
 	# vars: vars you want lags of
 	# countries: vector of uniq country names
@@ -66,14 +66,16 @@ lagger = function(data, vars, countries, dates, laglength=1){
 	for(var in vars){
 		newname = paste(var, '.l', laglength, sep='')
 		command = paste('newdata$', newname, '=NA', sep='')
-		# eval(command)
-		print(command)
+		if(evaluate){ eval(command) }
+		else{ print(command) }
 	}
 	return;
 
 	# lag vars
 	for(country1 in countries){
+		print(country1)
 		for(country2 in countries){
+			print(country2)
 			for(i in (laglength+1):length(dates)){
 				date.to = dates[i] # eg feb, march, april
 				date.from = dates[i-laglength] # jan, feb, mar
@@ -83,9 +85,10 @@ lagger = function(data, vars, countries, dates, laglength=1){
 					next
 				}
 				for(var in vars){
-					command = paste('newdata[', row.to, ', "', var, '""] = newdata[', row.from, ', "', var, '""]', sep='')
-					# eval(command)
-					print(command)
+					newname = paste(var, '.l', laglength, sep='')
+					command = paste('newdata[', row.to, ', "', newname, '"] = newdata[', row.from, ', "', var, '"]', sep='')
+					if(evaluate){ eval(command) }
+					else{ print(command) }
 				}
 			}
 		}
@@ -106,7 +109,7 @@ countries = sort(unique(c(data$country_1, data$country_2)))
 countries
 dates = sort(unique(data$date))
 dates
-lagger(data, vars, countries[1:10], dates[1:10], laglength=1)
+lagger(data, vars, countries, dates, laglength=1, evaluate=TRUE)
 
 
 # create 1-month diffs of vars
