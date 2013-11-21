@@ -52,7 +52,61 @@ summary(data$hostile1)
 summary(data$hostile5) # biggest dropoff: 4-5
 
 
+
 # create lagged versions of vars
+lagger = function(data, vars, countries, dates, laglength=1){
+	# data: the full dataset
+	# vars: vars you want lags of
+	# countries: vector of uniq country names
+	# dates: vector of uniq (sorted) dates
+	# laglength: # months you want laggged -- scalar
+	newdata = data
+
+	# create new variables, eg newdata$foo.l1
+	for(var in vars){
+		newname = paste(var, '.l', laglength, sep='')
+		command = paste('newdata$', newname, '=NA', sep='')
+		# eval(command)
+		print(command)
+	}
+	return;
+
+	# lag vars
+	for(country1 in countries){
+		for(country2 in countries){
+			for(i in (laglength+1):length(dates)){
+				date.to = dates[i] # eg feb, march, april
+				date.from = dates[i-laglength] # jan, feb, mar
+				row.from = which(newdata$country_1==country1 & newdata$country_2==country2 & newdata$date==date.from)[1]
+				row.to = which(newdata$country_1==country1 & newdata$country_2==country2 & newdata$date==date.to)[1]
+				if(is.na(row.from) || is.na(row.to)){
+					next
+				}
+				for(var in vars){
+					command = paste('newdata[', row.to, ', "', var, '""] = newdata[', row.from, ', "', var, '""]', sep='')
+					# eval(command)
+					print(command)
+				}
+			}
+		}
+	}
+	return(newdata)
+}
+
+names(data)
+vars = c(names(data[7:31]), 'mid', 'hostile1', 'hostile2', 'hostile3','hostile4','hostile5')
+#  [1] "event1"   "event2"   "event3"   "event4"   "event5"   "event6"  
+#  [7] "event7"   "event8"   "event9"   "event10"  "event11"  "event12" 
+# [13] "event13"  "event14"  "event15"  "event16"  "event17"  "event18" 
+# [19] "event19"  "event20"  "actorMIL" "quad1"    "quad2"    "quad3"   
+# [25] "quad4"    "mid"      "hostile1" "hostile2" "hostile3" "hostile4"
+# [31] "hostile5"
+vars
+countries = sort(unique(c(data$country_1, data$country_2)))
+countries
+dates = sort(unique(data$date))
+dates
+lagger(data, vars, countries[1:10], dates[1:10], laglength=1)
 
 
 # create 1-month diffs of vars

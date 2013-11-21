@@ -20,7 +20,3 @@ require(zoo)
 # define constants
 pathCode = '~/github/gdelt-to-mids' 
 pathData = '~/github/gdelt-to-mids/data' 
-
-# custom functions
-setwd(pathCode)
-source('lagger.R')
