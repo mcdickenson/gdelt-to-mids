@@ -53,48 +53,48 @@ summary(data$hostile5) # biggest dropoff: 4-5
 
 
 
-# create lagged versions of vars
-lagger = function(data, vars, countries, dates, laglength=1, evaluate=FALSE){
-	# data: the full dataset
-	# vars: vars you want lags of
-	# countries: vector of uniq country names
-	# dates: vector of uniq (sorted) dates
-	# laglength: # months you want laggged -- scalar
-	newdata = data
+# # create lagged versions of vars
+# lagger = function(data, vars, countries, dates, laglength=1, evaluate=FALSE){
+# 	# data: the full dataset
+# 	# vars: vars you want lags of
+# 	# countries: vector of uniq country names
+# 	# dates: vector of uniq (sorted) dates
+# 	# laglength: # months you want laggged -- scalar
+# 	newdata = data
 
-	# create new variables, eg newdata$foo.l1
-	for(var in vars){
-		newname = paste(var, '.l', laglength, sep='')
-		command = paste('newdata$', newname, '=NA', sep='')
-		if(evaluate){ eval(command) }
-		else{ print(command) }
-	}
-	return;
+# 	# create new variables, eg newdata$foo.l1
+# 	for(var in vars){
+# 		newname = paste(var, '.l', laglength, sep='')
+# 		command = paste('newdata$', newname, '=NA', sep='')
+# 		if(evaluate){ eval(command) }
+# 		else{ print(command) }
+# 	}
+# 	# return;
 
-	# lag vars
-	for(country1 in countries){
-		print(country1)
-		for(country2 in countries){
-			print(country2)
-			for(i in (laglength+1):length(dates)){
-				date.to = dates[i] # eg feb, march, april
-				date.from = dates[i-laglength] # jan, feb, mar
-				row.from = which(newdata$country_1==country1 & newdata$country_2==country2 & newdata$date==date.from)[1]
-				row.to = which(newdata$country_1==country1 & newdata$country_2==country2 & newdata$date==date.to)[1]
-				if(is.na(row.from) || is.na(row.to)){
-					next
-				}
-				for(var in vars){
-					newname = paste(var, '.l', laglength, sep='')
-					command = paste('newdata[', row.to, ', "', newname, '"] = newdata[', row.from, ', "', var, '"]', sep='')
-					if(evaluate){ eval(command) }
-					else{ print(command) }
-				}
-			}
-		}
-	}
-	return(newdata)
-}
+# 	# lag vars
+# 	for(country1 in countries){
+# 		print(country1)
+# 		for(country2 in countries){
+# 			print(country2)
+# 			for(i in (laglength+1):length(dates)){
+# 				date.to = dates[i] # eg feb, march, april
+# 				date.from = dates[i-laglength] # jan, feb, mar
+# 				row.from = which(newdata$country_1==country1 & newdata$country_2==country2 & newdata$date==date.from)[1]
+# 				row.to = which(newdata$country_1==country1 & newdata$country_2==country2 & newdata$date==date.to)[1]
+# 				if(is.na(row.from) || is.na(row.to)){
+# 					next
+# 				}
+# 				for(var in vars){
+# 					newname = paste(var, '.l', laglength, sep='')
+# 					command = paste('newdata[', row.to, ', "', newname, '"] = newdata[', row.from, ', "', var, '"]', sep='')
+# 					if(evaluate){ eval(command) }
+# 					else{ print(command) }
+# 				}
+# 			}
+# 		}
+# 	}
+# 	return(newdata)
+# }
 
 names(data)
 vars = c(names(data[7:31]), 'mid', 'hostile1', 'hostile2', 'hostile3','hostile4','hostile5')
@@ -109,8 +109,36 @@ countries = sort(unique(c(data$country_1, data$country_2)))
 countries
 dates = sort(unique(data$date))
 dates
-lagger(data, vars, countries, dates, laglength=1, evaluate=TRUE)
+# lagger(data, vars, countries, dates, laglength=1, evaluate=TRUE)
 
+
+
+###
+LAGLENGTH = 1
+newdata = data 
+newvars = c()
+for(var in vars){
+	newname = paste(var, '.l', LAGLENGTH, sep='')
+	newvars = c(newvars, newname)
+	command = paste('newdata$', newname, ' = NA', sep='')
+	print(command)
+	eval(parse(text=command))
+}
+newvars
+
+
+names(newdata)
+for(i in 1:nrow(newdata)){
+	row = newdata[i,]
+	date.to = row$date 
+	if (date.to == min(dates)){ next }
+	date.from = dates[(which(dates==date.to)-LAGLENGTH)]
+	country1 = row$country_1
+	country2 = row$country_2
+	row.from = which(newdata$country_1==country1 & newdata$country_2 == country2 & newdata$date==date.from)
+	row[, newvars] = row.from[, vars]
+	if(i%%100==0){print(i/nrow(newdata))}
+}
 
 # create 1-month diffs of vars
 # create proportion changes
