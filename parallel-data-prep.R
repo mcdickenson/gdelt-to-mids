@@ -1,4 +1,5 @@
 #!/usr/bin/Rscript
+
 rm(list=ls())
 setwd('~/github/gdelt-to-mids')
 source('start.R')
@@ -21,22 +22,22 @@ myLagger = function(i, LAGLENGTH=1){
 	print(i)
 	row = newdata[i,]
 	date.to = row$date 
-	if (date.to == min(dates)){ return(rep(NA, length(vars))); }
+	if (date.to == min(dates)){ next }
 	date.from = dates[(which(dates==date.to)-LAGLENGTH)]
 	country1 = row$country_1
 	country2 = row$country_2
 	want = which((newdata$country_1==country1) & (newdata$country_2 == country2) & (newdata$date==date.from))[1]
-	if (is.na(want)){ return(rep(NA, length(vars))); }
+	if (is.na(want)){ next }
 	row.from = newdata[want, ]
 	return(row.from[, vars])
 }
 
 cl = makeCluster(4)
 registerDoSNOW(cl)
-getLag = foreach(i=1:nrow(newdata), .combine=rbind) %dopar% {
+getLag = foreach(i=1:nrow(newdata), .combine=rbind, .errorhandling='remove') %dopar% {
 	myLagger(i)
 }
 stopCluster(cl)
-output[1:LIMIT, ] = getLag
+output[1:nrow(newdata), ] = getLag
 save(output, file="pdp-output.rda")
 
