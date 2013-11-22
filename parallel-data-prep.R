@@ -1,3 +1,4 @@
+#!/usr/bin/Rscript
 rm(list=ls())
 setwd('~/github/gdelt-to-mids')
 source('start.R')
