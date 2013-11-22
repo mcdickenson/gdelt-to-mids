@@ -140,9 +140,11 @@ for(i in 1:nrow(newdata)){
 	row.from = newdata[want, ]
 	newdata[i, newvars] = row.from[, vars]
 }
-
-
-
+print(i)
+newdata_subset = newdata[1:27106,]
+save(newdata_subset, file="newdata_27106.rda")
+save(newdata, file="newdata.rda")
+getwd()
 # create 1-month diffs of vars
 # create proportion changes
 # create % conflictual vs cooperative
