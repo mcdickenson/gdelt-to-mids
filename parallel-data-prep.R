@@ -38,6 +38,7 @@ getLag = foreach(i=1:nrow(newdata), .combine=rbind, .errorhandling='remove') %do
 	myLagger(i)
 }
 stopCluster(cl)
-output[1:nrow(newdata), ] = getLag
-save(output, file="pdp-output.rda")
+
+save.image()
+save(getLag, file="pdp-output.rda")
 
