@@ -14,31 +14,42 @@ load("newdata.rda")
 dim(newdata)
 
 vars = c(names(newdata[7:31]), 'mid', 'hostile1', 'hostile2', 'hostile3','hostile4','hostile5')
+newvars = paste(vars, ".l1", sep="")
 countries = sort(unique(c(newdata$country_1, newdata$country_2)))
 dates = sort(unique(newdata$date))
-output = matrix(NA, nrow=nrow(newdata), ncol=length(vars))
+dim(newdata)
+names(newdata)
 
 myLagger = function(i, LAGLENGTH=1){
-	print(i)
 	row = newdata[i,]
 	date.to = row$date 
-	if (date.to == min(dates)){ next }
+	if (date.to == min(dates)){ 
+		return(NA) 
+	}
 	date.from = dates[(which(dates==date.to)-LAGLENGTH)]
-	country1 = row$country_1
-	country2 = row$country_2
-	want = which((newdata$country_1==country1) & (newdata$country_2 == country2) & (newdata$date==date.from))[1]
-	if (is.na(want)){ next }
+	want = which((newdata$country_1==row$country_1) & (newdata$country_2 == row$country_2) & (newdata$date==date.from))[1]
+	if (is.na(want)){ 
+		return(NA)
+	}
 	row.from = newdata[want, ]
 	return(row.from[, vars])
 }
 
-cl = makeCluster(4)
-registerDoSNOW(cl)
-getLag = foreach(i=1:nrow(newdata), .combine=rbind, .errorhandling='remove') %dopar% {
-	myLagger(i)
-}
-stopCluster(cl)
 
-save.image()
-save(getLag, file="pdp-output.rda")
+mins = c(1, 100001, 200001, 300001, 400001, 500001)
+maxs = c(100000, 200000, 300000, 400000, 500000, nrow(newdata))
+for(j in 1:6){
+	start = mins[j]
+	stop = maxs[j]
+	filename = paste("output", j, ".rda", sep="")
+	for(x in start:stop){
+		print(x)
+		tmp = myLagger(x)
+		if(is.na(tmp[1])){ next }
+		else{
+			newdata[x , newvars ] = tmp  
+		}
+	}
+	save(newdata, file=filename)
+}
 
