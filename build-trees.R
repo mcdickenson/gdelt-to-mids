@@ -25,13 +25,30 @@ names(data)
 
 # dvs: HostlevMax, hostile1, ..., hostile5
 
+
+
+# todo: compute helper variables
+
+
+
 # tree using current variables
 # form_current = as.formula(HostlevMax ~ actorMIL + quad1 + quad2 + quad3 + quad4)
-form_current = as.formula(HostlevMax ~ actorMIL + 
-	event1 + event2 + event3 + event4 + event5 + 
-	event6 + event7 + event8 + event9 + event10 +
-	event11+ event12+ event13+ event14+ event15 +
-	event16+ event17+ event18+ event19+ event20)
+
+# best for this dv: 
+# form_current = as.formula(HostlevMax ~ actorMIL + 
+# 	event1 + event2 + event3 + event4 + event5 + 
+# 	event6 + event7 + event8 + event9 + event10 +
+# 	event11+ event12+ event13+ event14+ event15 +
+# 	event16+ event17+ event18+ event19+ event20)
+
+# not bad:
+form_current = as.formula(hostile5 ~ actorMIL + quad1 + quad2 + quad3 + quad4)
+
+# form_current = as.formula(HostlevMax ~ actorMIL + 
+# 	event1 + event2 + event3 + event4 + event5 + 
+# 	event6 + event7 + event8 + event9 + event10 +
+# 	event11+ event12+ event13+ event14+ event15 +
+# 	event16+ event17+ event18+ event19+ event20)
 
 start = Sys.time()
 tree_current = rpart(form_current, data=data)
