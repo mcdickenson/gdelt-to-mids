@@ -23,6 +23,8 @@ dim(data)
 names(data)
 # todo: consider doing a complete-case analysis
 
+# todo: name variables more nicely for final trees
+
 # dvs: HostlevMax, hostile1, ..., hostile5
 
 
@@ -42,13 +44,14 @@ names(data)
 # 	event16+ event17+ event18+ event19+ event20)
 
 # not bad:
-form_current = as.formula(hostile5 ~ actorMIL + quad1 + quad2 + quad3 + quad4)
+# form_current = as.formula(hostile5 ~ actorMIL + quad1 + quad2 + quad3 + quad4)
 
-# form_current = as.formula(HostlevMax ~ actorMIL + 
-# 	event1 + event2 + event3 + event4 + event5 + 
-# 	event6 + event7 + event8 + event9 + event10 +
-# 	event11+ event12+ event13+ event14+ event15 +
-# 	event16+ event17+ event18+ event19+ event20)
+# best so far (lowest mse):
+form_current = as.formula(hostile5 ~ actorMIL + 
+	event1 + event2 + event3 + event4 + event5 + 
+	event6 + event7 + event8 + event9 + event10 +
+	event11+ event12+ event13+ event14+ event15 +
+	event16+ event17+ event18+ event19+ event20)
 
 start = Sys.time()
 tree_current = rpart(form_current, data=data)
@@ -62,10 +65,8 @@ prp(tree_current)
 
 # todo: consider rpart.control(minsplit=x, cp=y, xval=n, maxdepth=k)
 
-# tree using lagged variables
+# todo: tree using lagged variables
 
-# tree using first-differences
+# todo: tree using first-differences
 
-# tree using quad percentages
-
-# tree using first-differences and quad percentages
+# todo: tree using quad percentages
