@@ -224,24 +224,25 @@ prp(tree_sink)
 ############
 # my model
 
-form_mine = as.formula(HostlevMax ~ actorMIL + 
-	# quad1  + quad2  + quad3  + quad4  +
+# form_mine = as.formula(HostlevMax ~ actorMIL + 
+# 	# quad1  + quad2  + quad3  + quad4  +
+# 	quad1p.l1 + quad2p.l1 + quad3p.l1 + quad4p.l1 +
+# 	event1.d1 + event2.d1 + event3.d1 + event4.d1 + event5.d1 + 
+# 	event6.d1 + event7.d1 + event8.d1 + event9.d1 + event10.d1 +
+# 	event11.d1+ event12.d1+ event13.d1+ event14.d1+ event15.d1 +
+# 	event16.d1+ event17.d1+ event18.d1+ event19.d1+ event20.d1)
+
+form_mine = as.formula(hostile1 ~ actorMIL + 
 	quad1p.l1 + quad2p.l1 + quad3p.l1 + quad4p.l1 +
 	event1.d1 + event2.d1 + event3.d1 + event4.d1 + event5.d1 + 
 	event6.d1 + event7.d1 + event8.d1 + event9.d1 + event10.d1 +
 	event11.d1+ event12.d1+ event13.d1+ event14.d1+ event15.d1 +
 	event16.d1+ event17.d1+ event18.d1+ event19.d1+ event20.d1)
 
-form_mine = as.formula(hostile4 ~ actorMIL + 
-	# quad1  + quad2  + quad3  + quad4  +
-	quad1p.l1 + quad2p.l1 + quad3p.l1 + quad4p.l1 +
-	event1.d1 + event2.d1 + event3.d1 + event4.d1 + event5.d1 + 
-	event6.d1 + event7.d1 + event8.d1 + event9.d1 + event10.d1 +
-	event11.d1+ event12.d1+ event13.d1+ event14.d1+ event15.d1 +
-	event16.d1+ event17.d1+ event18.d1+ event19.d1+ event20.d1)
-
+# todo: specify a loss matrix or split='gini' or split='information'
+ctrl = rpart.control(cp=1e-3)
 start = Sys.time()
-tree_mine = rpart(form_mine, data=data)
+tree_mine = rpart(form_mine, data=data, method='class', control=ctrl)
 runtime = Sys.time() - start
 runtime
 
@@ -249,3 +250,5 @@ tree_mine
 summary(tree_mine)
 printcp(tree_mine)
 prp(tree_mine)
+
+?rpart
