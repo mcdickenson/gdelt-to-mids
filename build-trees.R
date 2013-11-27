@@ -246,6 +246,10 @@ tree_mine = rpart(form_mine, data=data, method='class', control=ctrl)
 runtime = Sys.time() - start
 runtime
 
+yhat = predict(tree_mine, type='class')
+yobs = data$hostile1
+sum(as.numeric(yhat!=yobs)) # 3222 misclassifications
+
 tree_mine
 summary(tree_mine)
 printcp(tree_mine)
