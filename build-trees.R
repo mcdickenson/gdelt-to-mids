@@ -240,15 +240,19 @@ form_mine = as.formula(hostile1 ~ actorMIL +
 	event16.d1+ event17.d1+ event18.d1+ event19.d1+ event20.d1)
 
 # todo: specify a loss matrix or split='gini' or split='information'
-ctrl = rpart.control(cp=1e-3)
+ctrl = rpart.control(cp=1e-4)
 start = Sys.time()
-tree_mine = rpart(form_mine, data=data, method='class', control=ctrl)
+tree_mine = rpart(form_mine, data=data, 
+	method='class', control=ctrl,
+	parms=list(split='information'))
 runtime = Sys.time() - start
 runtime
 
 yhat = predict(tree_mine, type='class')
 yobs = data$hostile1
-sum(as.numeric(yhat!=yobs)) # 3222 misclassifications
+sum(as.numeric(yhat!=yobs)) 
+sum(yobs)
+sum(as.numeric(yhat!=yobs))/sum(yobs) # 0.833
 
 tree_mine
 summary(tree_mine)
