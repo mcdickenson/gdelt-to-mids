@@ -239,11 +239,9 @@ prp(tree_sink)
 # 	event11.d1+ event12.d1+ event13.d1+ event14.d1+ event15.d1 +
 # 	event16.d1+ event17.d1+ event18.d1+ event19.d1+ event20.d1)
 
-form_mine = as.formula(hostile1 ~ actorMIL + 
-	quad1p.l1 + quad2p.l1 + quad3p.l1 + quad4p.l1 +
-	quad1p    + quad2p    + quad3p    + quad4p    +	
-	quad1.d1  +
-	quad2.d1  +	
+form_mine = as.formula(hostile4 ~ actorMIL + 
+	quad3p.l1 + quad4p.l1 +
+	quad3p    + quad4p    +	
 	event11.d1+ event12.d1+ event13.d1+ event14.d1+ event15.d1 +
 	event16.d1+ event17.d1+ event18.d1+ event19.d1+ event20.d1)
 
@@ -258,11 +256,11 @@ runtime = Sys.time() - start
 runtime
 
 yhat = predict(tree_mine, type='class')
-yobs = data$hostile1
+yobs = data$hostile4
 length(which(yhat==0 & yobs==1))
 sum(as.numeric(yhat!=yobs)) 
 sum(yobs)
-sum(as.numeric(yhat!=yobs))/sum(yobs) # 0.823
+sum(as.numeric(yhat!=yobs))/sum(yobs) # 0.878
 
 tree_mine
 summary(tree_mine)
@@ -274,9 +272,8 @@ rsq.rpart(tree_mine)
 # snip.rpart(x, toss)
 # prune(x, cp=)
 
-tree_mine_pruned = prune(tree_mine, cp=0.00045)
+tree_mine_pruned = prune(tree_mine, cp=0.001)
 prp(tree_mine_pruned)
 
 yhat = predict(tree_mine_pruned, type='class')
-yobs = data$hostile1
 sum(as.numeric(yhat!=yobs))/sum(yobs) # 0.823
