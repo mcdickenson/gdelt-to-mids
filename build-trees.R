@@ -283,7 +283,7 @@ tree_mine_pruned = prune(tree_mine, cp=0.00019)
 prp(tree_mine_pruned)
 
 yhat = predict(tree_mine_pruned, type='class')
-sum(as.numeric(yhat!=yobs))/sum(yobs) # 0.823
+sum(as.numeric(yhat!=yobs))/sum(yobs) # 0.877
 
 save(tree_mine, file="tree_mine.rda")
 save(tree_mine_pruned, file="tree_mine_pruned.rda")
