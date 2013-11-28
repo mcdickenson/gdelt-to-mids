@@ -122,15 +122,15 @@ for(i in 1:length(vars)){
 # 	event16.d1+ event17.d1+ event18.d1+ event19.d1+ event20.d1)
 
 # best so far
-form_diffed = as.formula(hostile1 ~ actorMIL + 
+form_diffed = as.formula(hostile4 ~ actorMIL + 
 	event1.d1 + event2.d1 + event3.d1 + event4.d1 + event5.d1 + 
 	event6.d1 + event7.d1 + event8.d1 + event9.d1 + event10.d1 +
 	event11.d1+ event12.d1+ event13.d1+ event14.d1+ event15.d1 +
 	event16.d1+ event17.d1+ event18.d1+ event19.d1+ event20.d1)
 
-ctrl = rpart.control(cp=1e-5)
+ctrl = rpart.control(cp=1e-4)
 start = Sys.time()
-tree_diffed = rpart(form_diffed, data=data, control=ctrl)
+tree_diffed = rpart(form_diffed, data=data, control=ctrl, method='class')
 runtime = Sys.time() - start
 runtime
 
@@ -163,7 +163,7 @@ form_quadp = as.formula(hostile4 ~ actorMIL +
 	quad1p + quad2p + quad3p + quad4p )
 
 start = Sys.time()
-tree_quadp = rpart(form_quadp, data=data)
+tree_quadp = rpart(form_quadp, data=data, control=ctrl, method='class')
 runtime = Sys.time() - start
 runtime
 
@@ -239,9 +239,16 @@ prp(tree_sink)
 # 	event11.d1+ event12.d1+ event13.d1+ event14.d1+ event15.d1 +
 # 	event16.d1+ event17.d1+ event18.d1+ event19.d1+ event20.d1)
 
+# form_mine = as.formula(hostile4 ~ actorMIL + 
+# 	quad3p.l1 + quad4p.l1 +
+# 	quad3p    + quad4p    +	
+# 	event11.d1+ event12.d1+ event13.d1+ event14.d1+ event15.d1 +
+# 	event16.d1+ event17.d1+ event18.d1+ event19.d1+ event20.d1)
+
 form_mine = as.formula(hostile4 ~ actorMIL + 
-	quad3p.l1 + quad4p.l1 +
-	quad3p    + quad4p    +	
+	quad1p.l1 + quad2p.l1 + quad3p.l1 + quad4p.l1 +
+	event1.d1 + event2.d1 + event3.d1 + event4.d1 + event5.d1 + 
+	event6.d1 + event7.d1 + event8.d1 + event9.d1 + event10.d1 +
 	event11.d1+ event12.d1+ event13.d1+ event14.d1+ event15.d1 +
 	event16.d1+ event17.d1+ event18.d1+ event19.d1+ event20.d1)
 
@@ -260,7 +267,7 @@ yobs = data$hostile4
 length(which(yhat==0 & yobs==1))
 sum(as.numeric(yhat!=yobs)) 
 sum(yobs)
-sum(as.numeric(yhat!=yobs))/sum(yobs) # 0.878
+sum(as.numeric(yhat!=yobs))/sum(yobs) # 0.865
 
 tree_mine
 summary(tree_mine)
@@ -272,8 +279,11 @@ rsq.rpart(tree_mine)
 # snip.rpart(x, toss)
 # prune(x, cp=)
 
-tree_mine_pruned = prune(tree_mine, cp=0.001)
+tree_mine_pruned = prune(tree_mine, cp=0.00019)
 prp(tree_mine_pruned)
 
 yhat = predict(tree_mine_pruned, type='class')
 sum(as.numeric(yhat!=yobs))/sum(yobs) # 0.823
+
+save(tree_mine, file="tree_mine.rda")
+save(tree_mine_pruned, file="tree_mine_pruned.rda")
