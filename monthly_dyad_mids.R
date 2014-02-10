@@ -1,11 +1,12 @@
 rm(list=ls())
 
-toLoad <- c("countrycode", "dplyr", "data.table", "reshape2")
+toLoad <- c("plyr", "countrycode", "dplyr", "data.table", "reshape2")
 lapply(toLoad, library, character.only=TRUE)
 
 data <- read.csv("../data/MID/MIDB_4.0.csv")
 names(data)
 
+# Populate the full matrix of dyads months
 years <- c(min(data$StYear):max(data$StYear))
 months <- c(1:12)
 month_years <- expand.grid(years, months)
@@ -20,15 +21,23 @@ finalMatrix <- expand.grid(paste(dyads[,1], dyads[,2]),
 finalMatrix2 <- cbind(data.frame(do.call(rbind, strsplit(finalMatrix$Var1, " "))),
                       data.frame(do.call(rbind, strsplit(finalMatrix$Var2, " "))))
 
+# Create the matrix of conflictual dyad months
 
-temp <- head(finalMatrix)
-a <- strsplit(temp$Var1, " ")
-new <- cbind(data.frame(do.call(rbind, strsplit(temp$Var1, " "))),
-             data.frame(do.call(rbind, strsplit(temp$Var2, " "))))
+f_isConflictual <- function(dyad, ref) {
+  conflict <- ref$SideA[ref$StAbb==dyad[1]] != ref$SideA[ref$StAbb==dyad[2]]
+  return(conflict)
+}
 
-test <- matrix(c("USA", "USA", "FRA", "UK"), ncol=2)
-test2 <- matrix(c(2000, 2000, 1, 2), ncol=2)
+f_dispIntoDyad <- function(df) {
+  dyads <- t(combn(as.character(df$StAbb), 2))
+  dyads <- cbind(dyads, apply(dyads, 1, f_isConflictual, df))
+  return(dyads)
+}
 
-paste(test)
+df <- data[data$DispNum3==3429, ]
+f_dispIntoDyad(df)
 
-expand.grid(paste(test[,1], test[,2]), paste(test2[,1], test2[,2])
+a <- head(data)
+res <- ddply(a, c("DispNum3"), f_dispIntoDyad)
+res
+# Finally merge the two matrix, keeping the info from the conflictual one
