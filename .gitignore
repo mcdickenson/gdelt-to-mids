@@ -9,3 +9,4 @@
 /data/*.tsv
 /data/*.*.gz
 /data/zips/*.zip
+.Rproj.user
