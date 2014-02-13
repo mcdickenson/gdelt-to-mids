@@ -26,6 +26,7 @@ finalMatrix <- expand.grid(paste(dyads[,1], dyads[,2]),
 finalMatrix2 <- cbind(data.frame(do.call(rbind, strsplit(finalMatrix$Var1, " "))),
                       data.frame(do.call(rbind, strsplit(finalMatrix$Var2, " "))))
 
+
 # ---- Step 2: Transform dispute data into matrix of dyad month ----
 
 # Create the matrix of conflictual dyad months from original data
@@ -104,5 +105,6 @@ temp
 system.time(res <- f_transformDispIntoDyad(temp))
 
 # Do it for the entire MID 4.0 dataset
+finalRes <- f_transformDispIntoDyad(data)
 
 # ---- Step 3: Merge the full matrix of dyad month with the one matrix got via transformation ----
