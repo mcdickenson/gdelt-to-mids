@@ -63,7 +63,19 @@ f_isConflictual <- function(dyadmonth, ref) {
     ref$SideA[ref$StAbb==stateB][matchMonthB]
   # If the currentMonth does not match any row then conflict is length 0, so:
   conflict <- ifelse(length(conflict)==0, FALSE, conflict)
-  return(conflict)
+  
+  # Do similarly for other factor
+  fatalityA <- ref$Fatality[ref$StAbb==stateA][matchMonthA]
+  fatalityB <- ref$Fatality[ref$StAbb==stateB][matchMonthB]
+  fatalityA <- ifelse(length(fatalityA)==0, NA, conflict)
+  fatalityB <- ifelse(length(fatalityB)==0, NA, conflict)
+  
+  hostlevA <- ref$HostLev[ref$StAbb==stateA][matchMonthA]
+  hostlevB <- ref$HostLev[ref$StAbb==stateB][matchMonthB]
+  hostlevA <- ifelse(length(hostlevA)==0, NA, conflict)
+  hostlevB <- ifelse(length(hostlevB)==0, NA, conflict)
+  
+  return(list(conflict, fatalityA, fatalityB, hostlevA, hostlevB))
 }
 
 # Function that takes one dispute and turn into dyads conflict
