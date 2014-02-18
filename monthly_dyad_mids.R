@@ -118,7 +118,6 @@ f_transformDispIntoDyad <- function(ref) {
   return(dyads_conflict)
 }
 
-<<<<<<< HEAD
 # Test one one dispute; 3429 is a conflict with 3 state
 # 298 is motherfucking WW 2!
 temp <- data[data$DispNum3==3429, ]
@@ -135,5 +134,6 @@ dataPost1990 <- data[data$StYear>=1990, ]
 system.time(finalRes <- ddply(dataPost1990, c("DispNum3"), f_transformDispIntoDyad))
 
 write.csv(finalRes, "dyad_month_MID_post1990.csv")
+
 
 # ---- Step 3: Merge the full matrix of dyad month with the one matrix got via transformation ----
