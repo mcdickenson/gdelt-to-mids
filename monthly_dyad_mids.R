@@ -63,7 +63,19 @@ f_isConflictual <- function(dyadmonth, ref) {
     ref$SideA[ref$StAbb==stateB][matchMonthB]
   # If the currentMonth does not match any row then conflict is length 0, so:
   conflict <- ifelse(length(conflict)==0, FALSE, conflict)
-  return(conflict)
+  
+  # Do similarly for other factor
+  fatalityA <- ref$Fatality[ref$StAbb==stateA][matchMonthA]
+  fatalityB <- ref$Fatality[ref$StAbb==stateB][matchMonthB]
+  fatalityA <- ifelse(length(fatalityA)==0, NA, fatalityA)
+  fatalityB <- ifelse(length(fatalityB)==0, NA, fatalityB)
+  
+  hostlevA <- ref$HostLev[ref$StAbb==stateA][matchMonthA]
+  hostlevB <- ref$HostLev[ref$StAbb==stateB][matchMonthB]
+  hostlevA <- ifelse(length(hostlevA)==0, NA, hostlevA)
+  hostlevB <- ifelse(length(hostlevB)==0, NA, hostlevB)
+  
+  return(data.frame(conflict, fatalityA, fatalityB, hostlevA, hostlevB))
 }
 
 # Function that takes one dispute and turn into dyads conflict
@@ -73,11 +85,16 @@ f_genDyadMonthFromDisp <- function(ref) {
   month_years <- expand.grid(years, months, stringsAsFactors=FALSE)
   
   countries <- as.character(unique(ref$StAbb))
-  dyads <- t(combn(countries, 2))
-  dyads <- data.frame(dyads[order(dyads[, 1], dyads[, 2]), ], stringsAsFactors=FALSE)
+  if (length(countries) > 2) {
+    dyads <- t(combn(countries, 2))
+    dyads <- data.frame(dyads[order(dyads[, 1], dyads[, 2]), ], stringsAsFactors=FALSE)
+  } else {
+    dyads <- data.frame(countries[1], countries[2])
+  }
+  
   
   # Match each dyad with each month. Had to temporarily join 2 countries into 1 var
-  # (ideal?)
+  # then split again (ideal?)
   finalMatrix <- expand.grid(paste(dyads[,1], dyads[,2]),
                              paste(month_years[,1], month_years[,2]),
                              stringsAsFactors = FALSE)
@@ -98,13 +115,19 @@ f_transformDispIntoDyad <- function(ref) {
   return(dyads_conflict)
 }
 
-# Test one one dispute (motherfucking WW 2!)
-temp <- data[data$DispNum3==258, ]
+# Test one one dispute; 3429 is a conflict with 3 state
+# 298 is motherfucking WW 2!
+temp <- data[data$DispNum3==3429, ]
 temp
-
 system.time(res <- f_transformDispIntoDyad(temp))
 
+# Test for several disputes
+temp2 <- head(data)
+table(temp2$DispNum3)
+system.time(res2 <- ddply(temp2, c("DispNum3"), f_transformDispIntoDyad))
+
 # Do it for the entire MID 4.0 dataset
-finalRes <- f_transformDispIntoDyad(data)
+dataPost1990 <- data[data$StYear>=1990, ]
+system.time(finalRes <- ddply(dataPost1990, c("DispNum3"), f_transformDispIntoDyad))
 
 # ---- Step 3: Merge the full matrix of dyad month with the one matrix got via transformation ----
