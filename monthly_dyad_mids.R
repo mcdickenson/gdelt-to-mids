@@ -67,6 +67,7 @@ f_isConflictual <- function(dyadmonth, ref) {
   # Do similarly for other factor
   fatalityA <- ref$Fatality[ref$StAbb==stateA][matchMonthA]
   fatalityB <- ref$Fatality[ref$StAbb==stateB][matchMonthB]
+
   fatalityA <- ifelse(length(fatalityA)==0, NA, fatalityA)
   fatalityB <- ifelse(length(fatalityB)==0, NA, fatalityB)
   
@@ -85,6 +86,7 @@ f_genDyadMonthFromDisp <- function(ref) {
   month_years <- expand.grid(years, months, stringsAsFactors=FALSE)
   
   countries <- as.character(unique(ref$StAbb))
+
   if (length(countries) > 2) {
     dyads <- t(combn(countries, 2))
     dyads <- data.frame(dyads[order(dyads[, 1], dyads[, 2]), ], stringsAsFactors=FALSE)
@@ -95,6 +97,7 @@ f_genDyadMonthFromDisp <- function(ref) {
   
   # Match each dyad with each month. Had to temporarily join 2 countries into 1 var
   # then split again (ideal?)
+
   finalMatrix <- expand.grid(paste(dyads[,1], dyads[,2]),
                              paste(month_years[,1], month_years[,2]),
                              stringsAsFactors = FALSE)
@@ -115,6 +118,7 @@ f_transformDispIntoDyad <- function(ref) {
   return(dyads_conflict)
 }
 
+<<<<<<< HEAD
 # Test one one dispute; 3429 is a conflict with 3 state
 # 298 is motherfucking WW 2!
 temp <- data[data$DispNum3==3429, ]
